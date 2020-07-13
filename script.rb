@@ -54,25 +54,58 @@ class Game
 end
 
 def play 
-  puts "\nAvailable colors: #{Game.available_colors.join(", ")}"
-  game = Game.new(Game.random_code)
+  print "Who do you wanna play as?(code-breaker, code-maker): "; choice = gets.chomp
+  case choice
+    when "code-breaker"
+      puts "\nAvailable colors: #{Game.available_colors.join(", ")}"
+      game = Game.new(Game.random_code)
 
-  p game.code
+      9.times do |try|
+        code_guess = []
+        puts; puts "(Try #{try + 1})"; puts 
+    
+        print "Type 4 colors (seperate with dash): "; code_guess = gets.chomp
+        code_guess = code_guess.split("-")
+    
+        game.feedback(code_guess)
+    
+        if code_guess == game.code
+          return ( puts "\nYou win!" )
+        elsif try == 8 && code_guess != game.code
+          return ( puts "\nYou lost." )
+        end
+      end
+    when "code-maker"
+      puts "\nAvailable colors: #{Game.available_colors.join(", ")}"
+      print "\nType in your code(4 colors, seperate with dash): "; code = gets.chomp
+      code = code.split("-")
+
+      game = Game.new(code)
+      final_guess = ["", "", "", ""]
+      
+      9.times do |try|
+        random_guess = Game.random_code
+        puts; puts "(Try #{try + 1})"; puts 
   
-  9.times do |try|
-    code_guess = []
-    puts; puts "(Try #{try + 1})"; puts 
+        puts "I'm guessing..."
 
-    print "Type 4 colors (seperate with dash): "; code_guess = gets.chomp
-    code_guess = code_guess.split("-")
-
-    game.feedback(code_guess)
-
-    if code_guess == game.code
-      return ( puts "\nYou win!" )
-    elsif try == 8 && code_guess != game.code
-      return ( puts "\nYou lost." )
-    end
+        4.times do |i|
+          if random_guess[i] == game.code[i] && final_guess[i] != random_guess[i]
+            final_guess[i] = game.code[i]
+            puts "I got #{final_guess[i]} in the right place!\n"
+          end
+        end
+        puts "My final guess for now:  #{final_guess}"
+        
+        if final_guess == game.code
+          return ( puts "\nI win!" )
+        elsif try == 8 && final_guess != game.code
+          return ( puts "\nI lost....................................................................." )
+        end
+      end
+    else
+      puts "Wrong input."
+      play 
   end
 end
 
