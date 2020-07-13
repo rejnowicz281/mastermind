@@ -72,7 +72,7 @@ def play
         if code_guess == game.code
           return ( puts "\nYou win!" )
         elsif try == 8 && code_guess != game.code
-          return ( puts "\nYou lost." )
+          return ( puts "\nYou lost. The code was #{game.code}" )
         end
       end
     when "code-maker"
