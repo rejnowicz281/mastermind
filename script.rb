@@ -7,13 +7,17 @@ class Game
     @code = code
   end
 
+  def self.random_color
+    random_id = rand(@@available_colors.length)
+    random_color = @@available_colors[random_id]
+
+    random_color
+  end
+
   def self.random_code
     random_code = []
   
-    4.times do
-      random_id = rand(@@available_colors.length)
-      random_code << @@available_colors[random_id]
-    end 
+    4.times {random_code << Game.random_color}
 
     random_code
   end
@@ -84,17 +88,14 @@ def play
       final_guess = ["", "", "", ""]
       
       9.times do |try|
-        random_guess = Game.random_code
         puts; puts "(Try #{try + 1})"; puts 
   
         puts "I'm guessing..."
 
-        4.times do |i|
-          if random_guess[i] == game.code[i] && final_guess[i] != random_guess[i]
-            final_guess[i] = game.code[i]
-            puts "I got #{final_guess[i]} in the right place!\n"
-          end
-        end
+        4.times { |i| final_guess[i] = Game.random_color unless final_guess[i] == game.code[i]}
+
+        4.times { |i| final_guess[i] = game.code[i] if final_guess[i] == game.code[i]}
+        
         puts "My final guess for now:  #{final_guess}"
         
         if final_guess == game.code
